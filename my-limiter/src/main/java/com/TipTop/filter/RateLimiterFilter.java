@@ -26,6 +26,8 @@ public class RateLimiterFilter extends OncePerRequestFilter {
             HttpServletResponse reponse,
             FilterChain chain) throws ServletException, IOException {
 
+        String clientId = request.getHeader("X-Client-Id");
+
         System.out.println("Incoming request: " + request.getMethod() + " " + request.getRequestURI());
     }
 }

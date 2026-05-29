@@ -2,6 +2,8 @@ package com.TipTop.ratelimiter.strategies;
 
 import org.springframework.beans.factory.annotation.Value;
 
+import com.TipTop.model.RateLimiterResult;
+
 import redis.clients.jedis.RedisClient;
 
 public class SlidingWindowStrategy implements RateLimiterStrategy {
@@ -16,6 +18,11 @@ public class SlidingWindowStrategy implements RateLimiterStrategy {
     public SlidingWindowStrategy(RedisClient redisClient, String luaSha) {
         this.redisClient = redisClient;
         this.luaSha = luaSha;
+    }
+
+    public RateLimiterResult check(String clientId, Integer tier) {
+        // check using sliding window
+        redisClient.evalsha(luaSha);
     }
 
 }
