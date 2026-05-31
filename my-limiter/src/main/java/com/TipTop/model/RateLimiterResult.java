@@ -1,5 +1,9 @@
 package com.TipTop.model;
 
-public record RateLimiterResult(String clientId, RateLimiterResult status, int remainningTokens, Integer retryAfter) {
+public record RateLimiterResult(
+        String clientId,
+        RateLimiterStatus status,
+        double remainningTokens,
+        Integer retryAfter) {
 
 }

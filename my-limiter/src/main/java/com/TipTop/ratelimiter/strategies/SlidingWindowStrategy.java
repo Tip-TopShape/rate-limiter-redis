@@ -2,7 +2,8 @@ package com.TipTop.ratelimiter.strategies;
 
 import org.springframework.beans.factory.annotation.Value;
 
-import com.TipTop.model.RateLimiterResult;
+import com.TipTop.model.CheckAttempt;
+import com.TipTop.model.Tier;
 
 import redis.clients.jedis.RedisClient;
 
@@ -20,7 +21,7 @@ public class SlidingWindowStrategy implements RateLimiterStrategy {
         this.luaSha = luaSha;
     }
 
-    public RateLimiterResult check(String clientId, Integer tier) {
+    public CheckAttempt check(String clientId, Tier tier) {
         // check using sliding window
         redisClient.evalsha(luaSha);
     }

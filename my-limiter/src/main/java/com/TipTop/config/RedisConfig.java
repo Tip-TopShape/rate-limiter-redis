@@ -51,7 +51,7 @@ public class RedisConfig {
         }
     }
 
-    @Bean
+    @Bean("stratSha")
     public String loadLua(RedisClient redisClient) {
         try {
             String script = new String(getClass()

@@ -1,11 +1,12 @@
 package com.TipTop.ratelimiter.strategies;
 
-import com.TipTop.model.RateLimiterResult;
+import com.TipTop.model.CheckAttempt;
+import com.TipTop.model.Tier;
 
 import redis.clients.jedis.RedisClient;
 
 public interface RateLimiterStrategy {
 
-    public RateLimiterResult check(String clientId);
+    public CheckAttempt check(String clientId, Tier tier);
 
 }

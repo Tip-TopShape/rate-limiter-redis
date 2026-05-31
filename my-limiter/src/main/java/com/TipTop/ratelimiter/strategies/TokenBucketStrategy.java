@@ -1,12 +1,15 @@
 package com.TipTop.ratelimiter.strategies;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 
-import com.TipTop.model.ClientRecord;
+import com.TipTop.model.CheckAttempt;
 import com.TipTop.model.RateLimiterResult;
+import com.TipTop.model.Tier;
 
 import redis.clients.jedis.RedisClient;
 
@@ -19,14 +22,24 @@ public class TokenBucketStrategy implements RateLimiterStrategy {
 
     private final String luaSha;
 
-    public TokenBucketStrategy(RedisClient redisClient, String luaSha) {
+    public TokenBucketStrategy(RedisClient redisClient, @Qualifier("stratSha") String luaSha) {
         this.redisClient = redisClient;
         this.luaSha = luaSha;
     }
 
-    public RateLimiterResult check(String clientId, Integer tier) {
+    public CheckAttempt check(String clientId, Tier tier) {
         // check using token bucket
 
-        // redisClient.evalsha(luaSha, null, null)
+        List<Object> result = (List<Object>) redisClient.evalsha(luaSha, List.of(String.valueOf(clientId)),
+                List.of(
+                        String.valueOf(tier.capacity),
+                        String.valueOf(tier.refillRate),
+                        String.valueOf(tier.refillInterval)));
+
+        boolean allowed = ((Long) result.get(0) == 1L);
+        double tokens = ((Long) result.get(1)).doubleValue();
+
+        return new CheckAttempt(allowed, tokens);
+
     }
 }
