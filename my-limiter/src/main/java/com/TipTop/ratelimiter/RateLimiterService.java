@@ -3,6 +3,7 @@ package com.TipTop.ratelimiter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -22,7 +23,7 @@ public class RateLimiterService {
 
     private final RateLimiterStrategy rateLimiterStrategy;
 
-    private final Map<String, Tier> Tiers = new HashMap<>();
+    private final Map<String, Tier> Tiers = new ConcurrentHashMap<>();
 
     private final RedisClient redisClient;
 
@@ -76,7 +77,9 @@ public class RateLimiterService {
 
     public void dequeue(String clientId) {
         // poll
+
         // check
+
     }
 
 }
