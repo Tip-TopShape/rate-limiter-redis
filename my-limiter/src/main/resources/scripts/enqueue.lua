@@ -1,6 +1,14 @@
 local key = KEYS[1]
-local now = tonumber(ARGV[4])
+local payload = tonumber(ARGV[1])
+local capacity = tonumber(ARGV[2])
 
-local bucket = redis.call('HMGET', key, 'tokens', 'last_refill')
-local tokens = tonumber(bucket[1])
-local last_refill = tonumber(bucket[2])
+local queueSize = redis.call('LLEN', key)
+
+local successfulPush = 0
+if queueSize < capacity then
+    redis.call('RPUSH', key, payload)
+    successfulPush = 1
+end
+
+return successfulPush
+

@@ -29,17 +29,13 @@ public class RateLimiterService {
 
     private final String eq;
 
-    private final String dq;
-
     public RateLimiterService(
             RateLimiterStrategy rateLimiterStrategy,
             RedisClient redisClient,
-            @Qualifier("enqueueSha") String enqueueSha,
-            @Qualifier("dequeueSha") String dequeueSha) {
+            @Qualifier("enqueueSha") String enqueueSha) {
         this.rateLimiterStrategy = rateLimiterStrategy;
         this.redisClient = redisClient;
         this.eq = enqueueSha;
-        this.dq = dequeueSha;
     }
 
     public RateLimiterResult check(String clientId, boolean upgrade) {
@@ -49,7 +45,9 @@ public class RateLimiterService {
         }
 
         CheckAttempt attempt = rateLimiterStrategy.check(clientId, Tiers.get(clientId));
-        if (attempt.allowed()) {
+
+        if (!attempt.allowed()) {
+            // try queue
             return null;
         }
 
@@ -63,7 +61,7 @@ public class RateLimiterService {
 
     public RateLimiterStatus enqueue(String clientId, String payload) {
         Tier tier = Tiers.get(clientId);
-        Object result = (Object) redisClient.evalsha(
+        Object result = redisClient.evalsha(
                 eq,
                 List.of("queue:" + clientId),
                 List.of(payload, String.valueOf(tier.capacity)));
@@ -73,13 +71,6 @@ public class RateLimiterService {
                 : RateLimiterStatus.FULL;
 
         return status;
-    }
-
-    public void dequeue(String clientId) {
-        // poll
-
-        // check
-
     }
 
 }
