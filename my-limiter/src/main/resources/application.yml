@@ -7,5 +7,6 @@ scripts:
   path:
     token_bucket: /scripts/token_bucket.lua 
     sliding_window: /scripts/sliding_window.lua
+    fixed_window: /scripts/sliding_window.lua
 ratelimiter:
   strategy: token_bucket

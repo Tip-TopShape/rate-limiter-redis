@@ -44,11 +44,12 @@ public class RateLimiterService {
             Tiers.put(clientId, !upgrade ? Tier.FREE : Tier.PAID);
         }
 
+        RateLimiterStatus status = RateLimiterStatus.ALLOWED;
         CheckAttempt attempt = rateLimiterStrategy.check(clientId, Tiers.get(clientId));
 
         if (!attempt.allowed()) {
             // try queue
-            return null;
+            status = RateLimiterStatus.DENIED;
         }
 
         return new RateLimiterResult(
@@ -57,20 +58,6 @@ public class RateLimiterService {
                 attempt.remainningTokens(),
                 null);
 
-    }
-
-    public RateLimiterStatus enqueue(String clientId, String payload) {
-        Tier tier = Tiers.get(clientId);
-        Object result = redisClient.evalsha(
-                eq,
-                List.of("queue:" + clientId),
-                List.of(payload, String.valueOf(tier.capacity)));
-
-        RateLimiterStatus status = ((boolean) result)
-                ? RateLimiterStatus.QUEUED
-                : RateLimiterStatus.FULL;
-
-        return status;
     }
 
 }

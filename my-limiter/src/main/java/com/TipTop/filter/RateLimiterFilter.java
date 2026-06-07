@@ -12,6 +12,7 @@ import com.TipTop.model.RateLimiterStatus;
 import com.TipTop.ratelimiter.RateLimiterService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import jakarta.servlet.AsyncContext;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,22 +31,25 @@ public class RateLimiterFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(
             HttpServletRequest request,
-            HttpServletResponse reponse,
+            HttpServletResponse response,
             FilterChain chain) throws ServletException, IOException {
 
         String clientId = request.getHeader("X-Client-Id");
-        
-        RateLimiterResult status = rateLimiterService.check(clientId, false);
 
-        if(status == null) {
-            // try queue
-            ObjectMapper mapper = new ObjectMapper();
-            Map<String, Object> payload = Map.of(
-                // TODO: serialize
-            );
-            rateLimiterService.enqueue(clientId, clientId)
-        }
+        boolean upgrade = false; // may be useless
+
+        RateLimiterResult result = rateLimiterService.check(clientId, upgrade);
 
         System.out.println("Incoming request: " + request.getMethod() + " " + request.getRequestURI());
+
+        if (result.status().equals(RateLimiterStatus.DENIED)) {
+            // try queue
+            response.setStatus(429); // TOO_MANY_REQUESTS
+            response.getWriter().write("Too Many Requests...");
+            return;
+        }
+
+        chain.doFilter(request, response);
+
     }
 }
