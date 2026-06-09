@@ -42,13 +42,14 @@ public class RedisConfig {
     }
 
     @Bean
-    public RateLimiterStrategy resolveStrategy() {
+    public RateLimiterStrategy resolveStrategy(RedisClient redisClient, Scripts script) {
         switch (strategy) {
             case "token_bucket":
-                return new TokenBucketStrategy();
+                return new TokenBucketStrategy(redisClient, script.tokenBucket());
             case "sliding_window":
-                return new SlidingWindowStrategy();
-
+                return new SlidingWindowStrategy(redisClient, script.slidingWindow());
+            case "fixed_window":
+                return new SlidingWindowStrategy(redisClient, script.fixedWindow());
             default:
                 throw new IllegalArgumentException("Unknown strategy: " + strategy);
         }

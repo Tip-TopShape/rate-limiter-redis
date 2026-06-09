@@ -1,5 +1,7 @@
 package com.TipTop.model;
 
-public record CheckAttempt(boolean allowed, double remainningTokens) {
+import java.util.Optional;
+
+public record CheckAttempt(boolean allowed, Optional<Double> remainningTokens) {
 
 }

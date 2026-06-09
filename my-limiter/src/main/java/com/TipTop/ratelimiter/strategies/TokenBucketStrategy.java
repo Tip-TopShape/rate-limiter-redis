@@ -3,6 +3,7 @@ package com.TipTop.ratelimiter.strategies;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,9 +38,9 @@ public class TokenBucketStrategy implements RateLimiterStrategy {
                         String.valueOf(tier.refillInterval)));
 
         boolean allowed = ((Long) result.get(0) == 1L);
-        double tokens = ((Long) result.get(1)).doubleValue();
+        Double tokens = ((Long) result.get(1)).doubleValue();
 
-        return new CheckAttempt(allowed, tokens);
+        return new CheckAttempt(allowed, Optional.of(tokens));
 
     }
 }

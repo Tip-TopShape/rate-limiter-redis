@@ -1,0 +1,19 @@
+local key = KEYS[1]
+local window = tonumber(ARGV[1])
+local timeStamp = tonumber(ARGV[2])
+local requestId = ARGV[3]
+local limit = tonumber(ARGV[4])
+
+local allowed = 0
+local cutoff = timeStamp - window
+-- remove older
+redis.call('ZREMRANGEBYSCORE', key, 0, cutoff)
+-- count
+local count = redis.call('ZCARD', key)
+-- check
+if count < limit then
+    redis.call('ZADD', key, timeStamp, requestId)
+    allowed = 1
+end
+
+return allowed

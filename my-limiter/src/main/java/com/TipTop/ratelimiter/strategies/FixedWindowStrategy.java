@@ -1,6 +1,7 @@
 package com.TipTop.ratelimiter.strategies;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
 
@@ -31,7 +32,8 @@ public class FixedWindowStrategy {
                 List.of(String.valueOf(tier.windowSize)));
 
         boolean allowed = ((Long) result.get(0) == 1L);
-        redisClient.evalsha(luaSha);
+
+        return new CheckAttempt(allowed, Optional.empty());
     }
 
 }

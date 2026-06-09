@@ -1,17 +1,14 @@
 package com.TipTop.ratelimiter;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import com.TipTop.config.Constants;
-import com.TipTop.model.Tier;
 import com.TipTop.model.CheckAttempt;
 import com.TipTop.model.RateLimiterResult;
 import com.TipTop.model.RateLimiterStatus;
+import com.TipTop.model.Tier;
 import com.TipTop.ratelimiter.strategies.RateLimiterStrategy;
 
 import redis.clients.jedis.RedisClient;
@@ -52,11 +49,14 @@ public class RateLimiterService {
             status = RateLimiterStatus.DENIED;
         }
 
+        Tier tier = Tiers.get(clientId);
+        long retryAfter = (long) Math.ceil(1.0 / tier.refillRate);
+
         return new RateLimiterResult(
                 clientId,
                 RateLimiterStatus.ALLOWED,
                 attempt.remainningTokens(),
-                null);
+                retryAfter);
 
     }
 

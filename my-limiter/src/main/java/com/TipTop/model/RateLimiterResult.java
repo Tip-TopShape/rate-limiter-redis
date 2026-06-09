@@ -1,9 +1,11 @@
 package com.TipTop.model;
 
+import java.util.Optional;
+
 public record RateLimiterResult(
         String clientId,
         RateLimiterStatus status,
-        double remainningTokens,
-        Integer retryAfter) {
+        Optional<Double> remainningTokens,
+        long retryAfter) {
 
 }
