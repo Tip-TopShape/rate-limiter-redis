@@ -24,15 +24,11 @@ public class RateLimiterService {
 
     private final RedisClient redisClient;
 
-    private final String eq;
-
     public RateLimiterService(
             RateLimiterStrategy rateLimiterStrategy,
-            RedisClient redisClient,
-            @Qualifier("enqueueSha") String enqueueSha) {
+            RedisClient redisClient) {
         this.rateLimiterStrategy = rateLimiterStrategy;
         this.redisClient = redisClient;
-        this.eq = enqueueSha;
     }
 
     public RateLimiterResult check(String clientId, boolean upgrade) {
@@ -49,14 +45,11 @@ public class RateLimiterService {
             status = RateLimiterStatus.DENIED;
         }
 
-        Tier tier = Tiers.get(clientId);
-        long retryAfter = (long) Math.ceil(1.0 / tier.refillRate);
-
         return new RateLimiterResult(
                 clientId,
-                RateLimiterStatus.ALLOWED,
+                status,
                 attempt.remainningTokens(),
-                retryAfter);
+                attempt.retryAfter());
 
     }
 

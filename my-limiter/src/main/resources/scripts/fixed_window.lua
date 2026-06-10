@@ -13,5 +13,7 @@ if counter > limit then
     allowed = 0
 end
 
-return allowed
+local retryAfter = redis.call('TTL', key)
+
+return {allowed, retryAfter}
 

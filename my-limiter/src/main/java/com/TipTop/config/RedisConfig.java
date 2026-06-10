@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.TipTop.ratelimiter.strategies.FixedWindowStrategy;
 import com.TipTop.ratelimiter.strategies.RateLimiterStrategy;
 import com.TipTop.ratelimiter.strategies.SlidingWindowStrategy;
 import com.TipTop.ratelimiter.strategies.TokenBucketStrategy;
@@ -49,7 +50,7 @@ public class RedisConfig {
             case "sliding_window":
                 return new SlidingWindowStrategy(redisClient, script.slidingWindow());
             case "fixed_window":
-                return new SlidingWindowStrategy(redisClient, script.fixedWindow());
+                return new FixedWindowStrategy(redisClient, script.fixedWindow());
             default:
                 throw new IllegalArgumentException("Unknown strategy: " + strategy);
         }

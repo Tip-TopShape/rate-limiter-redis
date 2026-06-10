@@ -35,12 +35,14 @@ public class TokenBucketStrategy implements RateLimiterStrategy {
                 List.of(
                         String.valueOf(tier.capacity),
                         String.valueOf(tier.refillRate),
-                        String.valueOf(tier.refillInterval)));
+                        String.valueOf(tier.refillInterval),
+                        String.valueOf(0)));
 
         boolean allowed = ((Long) result.get(0) == 1L);
         Double tokens = ((Long) result.get(1)).doubleValue();
+        long retryAfter = ((long) result.get(2));
 
-        return new CheckAttempt(allowed, Optional.of(tokens));
+        return new CheckAttempt(allowed, Optional.of(tokens), retryAfter);
 
     }
 }

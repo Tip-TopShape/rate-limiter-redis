@@ -17,7 +17,7 @@ local time_passed = now - last_refill
 local refills = math.floor(time_passed / refill_interval)
 
 if refills > 0 then
-    tokens = math.min(tokens + (refills * refill_rate))
+    tokens = math.min(capacity, tokens + (refills * refill_rate))
     last_refill = last_refill + (refills * refill_interval)
 end
 
@@ -28,5 +28,6 @@ if tokens >= 1 then
 end
 
 redis.call('HMSET', key, 'tokens', tokens, 'last_refill', last_refill)
+local retryAfter = math.ceil((1 - tokens ) / refill_rate);
 
-return {allowed, tokens}
+return {allowed, tokens, retryAfter}

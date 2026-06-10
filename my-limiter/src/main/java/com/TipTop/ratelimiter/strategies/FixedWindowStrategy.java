@@ -10,7 +10,7 @@ import com.TipTop.model.Tier;
 
 import redis.clients.jedis.RedisClient;
 
-public class FixedWindowStrategy {
+public class FixedWindowStrategy implements RateLimiterStrategy {
 
     @Value("${scripts.fixed_window")
     private String slidingWindow;
@@ -32,8 +32,9 @@ public class FixedWindowStrategy {
                 List.of(String.valueOf(tier.windowSize)));
 
         boolean allowed = ((Long) result.get(0) == 1L);
+        long retryAfter = ((long) result.get(1));
 
-        return new CheckAttempt(allowed, Optional.empty());
+        return new CheckAttempt(allowed, Optional.empty(), retryAfter);
     }
 
 }

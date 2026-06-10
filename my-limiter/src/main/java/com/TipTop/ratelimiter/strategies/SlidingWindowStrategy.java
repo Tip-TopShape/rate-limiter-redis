@@ -37,11 +37,13 @@ public class SlidingWindowStrategy implements RateLimiterStrategy {
                 List.of(
                         String.valueOf(tier.windowSize),
                         String.valueOf(now),
-                        uuid));
+                        uuid,
+                        String.valueOf(tier.maxRequestsPerWindow)));
 
         boolean allowed = ((Long) result.get(0) == 1L);
+        long retryAfter = ((long) result.get(1));
 
-        return new CheckAttempt(allowed, Optional.empty());
+        return new CheckAttempt(allowed, Optional.empty(), retryAfter);
     }
 
 }
