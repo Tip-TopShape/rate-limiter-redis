@@ -17,6 +17,6 @@ if count < limit then
 end
 
 local oldest = redis.call('ZRANGE', key, 0, 0, 'WITHSCORES')
-local retryAfter = tonumber(oldest[2]) + ( window - timeStamp )
+local retryAfter = tonumber(oldest[2]) + window - timeStamp
 
 return {allowed, retryAfter}

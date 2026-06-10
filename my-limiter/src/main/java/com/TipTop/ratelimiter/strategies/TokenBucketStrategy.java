@@ -16,9 +16,6 @@ import redis.clients.jedis.RedisClient;
 
 public class TokenBucketStrategy implements RateLimiterStrategy {
 
-    @Value("${scripts.token_bucket")
-    private String tokenBucketPath;
-
     private final RedisClient redisClient;
 
     private final String luaSha;
@@ -31,16 +28,17 @@ public class TokenBucketStrategy implements RateLimiterStrategy {
     public CheckAttempt check(String clientId, Tier tier) {
         // check using token bucket
 
+        long now = System.currentTimeMillis() / 1000;
         List<Object> result = (List<Object>) redisClient.evalsha(luaSha, List.of(String.valueOf(clientId)),
                 List.of(
                         String.valueOf(tier.capacity),
                         String.valueOf(tier.refillRate),
                         String.valueOf(tier.refillInterval),
-                        String.valueOf(0)));
+                        String.valueOf(now)));
 
         boolean allowed = ((Long) result.get(0) == 1L);
         Double tokens = ((Long) result.get(1)).doubleValue();
-        long retryAfter = ((long) result.get(2));
+        Long retryAfter = ((Long) result.get(2));
 
         return new CheckAttempt(allowed, Optional.of(tokens), retryAfter);
 

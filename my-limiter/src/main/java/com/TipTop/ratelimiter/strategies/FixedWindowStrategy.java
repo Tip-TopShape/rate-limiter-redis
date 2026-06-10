@@ -12,9 +12,6 @@ import redis.clients.jedis.RedisClient;
 
 public class FixedWindowStrategy implements RateLimiterStrategy {
 
-    @Value("${scripts.fixed_window")
-    private String slidingWindow;
-
     private final RedisClient redisClient;
 
     private final String luaSha;
@@ -32,7 +29,7 @@ public class FixedWindowStrategy implements RateLimiterStrategy {
                 List.of(String.valueOf(tier.windowSize)));
 
         boolean allowed = ((Long) result.get(0) == 1L);
-        long retryAfter = ((long) result.get(1));
+        Long retryAfter = ((Long) result.get(1));
 
         return new CheckAttempt(allowed, Optional.empty(), retryAfter);
     }

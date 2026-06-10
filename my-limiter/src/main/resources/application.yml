@@ -1,5 +1,4 @@
 redis:
-  url: ${REDIS_URL}
   host: ${REDIS_HOST}
   port: ${REDIS_PORT}
   password: ${REDIS_PASSWORD}
@@ -7,6 +6,6 @@ scripts:
   path:
     token_bucket: /scripts/token_bucket.lua 
     sliding_window: /scripts/sliding_window.lua
-    fixed_window: /scripts/sliding_window.lua
+    fixed_window: /scripts/fixed_window.lua
 ratelimiter:
   strategy: token_bucket

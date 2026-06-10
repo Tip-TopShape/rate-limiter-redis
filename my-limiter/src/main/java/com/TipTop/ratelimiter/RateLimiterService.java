@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 
 import com.TipTop.model.CheckAttempt;
 import com.TipTop.model.RateLimiterResult;
@@ -13,6 +14,7 @@ import com.TipTop.ratelimiter.strategies.RateLimiterStrategy;
 
 import redis.clients.jedis.RedisClient;
 
+@Service
 public class RateLimiterService {
 
     // what do you need?
@@ -22,13 +24,10 @@ public class RateLimiterService {
 
     private final Map<String, Tier> Tiers = new ConcurrentHashMap<>();
 
-    private final RedisClient redisClient;
-
     public RateLimiterService(
             RateLimiterStrategy rateLimiterStrategy,
             RedisClient redisClient) {
         this.rateLimiterStrategy = rateLimiterStrategy;
-        this.redisClient = redisClient;
     }
 
     public RateLimiterResult check(String clientId, boolean upgrade) {

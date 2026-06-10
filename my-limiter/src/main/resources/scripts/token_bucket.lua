@@ -27,7 +27,7 @@ if tokens >= 1 then
     allowed = 1
 end
 
-redis.call('HMSET', key, 'tokens', tokens, 'last_refill', last_refill)
 local retryAfter = math.ceil((1 - tokens ) / refill_rate);
+redis.call('HMSET', key, 'tokens', tokens, 'last_refill', last_refill)
 
 return {allowed, tokens, retryAfter}
