@@ -25,8 +25,7 @@ public class RateLimiterService {
     private final Map<String, Tier> Tiers = new ConcurrentHashMap<>();
 
     public RateLimiterService(
-            RateLimiterStrategy rateLimiterStrategy,
-            RedisClient redisClient) {
+            RateLimiterStrategy rateLimiterStrategy) {
         this.rateLimiterStrategy = rateLimiterStrategy;
     }
 
@@ -38,7 +37,7 @@ public class RateLimiterService {
 
         RateLimiterStatus status = RateLimiterStatus.ALLOWED;
         CheckAttempt attempt = rateLimiterStrategy.check(clientId, Tiers.get(clientId));
-
+        // System.out.println(attempt.retryAfter(), attempt.remainningTokens());
         if (!attempt.allowed()) {
             // try queue
             status = RateLimiterStatus.DENIED;
