@@ -1,4 +1,4 @@
-local key = KEYS[1]
+local key = "TW:"..KEYS[1]
 local capacity = tonumber(ARGV[1])
 local refill_rate = tonumber(ARGV[2])
 local refill_interval = tonumber(ARGV[3])

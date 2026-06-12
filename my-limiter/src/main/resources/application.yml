@@ -8,4 +8,4 @@ scripts:
     sliding_window: /scripts/sliding_window.lua
     fixed_window: /scripts/fixed_window.lua
 ratelimiter:
-  strategy: token_bucket
+  strategy: fixed_window

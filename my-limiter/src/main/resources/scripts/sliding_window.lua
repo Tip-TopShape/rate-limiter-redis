@@ -1,4 +1,4 @@
-local key = KEYS[1]
+local key = "SW:"..KEYS[1]
 local window = tonumber(ARGV[1])
 local timeStamp = tonumber(ARGV[2])
 local uuid = ARGV[3]

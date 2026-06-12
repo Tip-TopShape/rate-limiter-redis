@@ -26,7 +26,7 @@ public class FixedWindowStrategy implements RateLimiterStrategy {
         List<Object> result = (List<Object>) redisClient.evalsha(
                 luaSha,
                 List.of(String.valueOf(clientId)),
-                List.of(String.valueOf(tier.windowSize)));
+                List.of(String.valueOf(tier.windowSize), String.valueOf(tier.maxRequestsPerWindow)));
 
         boolean allowed = ((Long) result.get(0) == 1L);
         Long retryAfter = ((Long) result.get(1));

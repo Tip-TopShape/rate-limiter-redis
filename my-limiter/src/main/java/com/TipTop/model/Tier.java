@@ -1,8 +1,8 @@
 package com.TipTop.model;
 
 public enum Tier {
-    FREE(100, 10, 1, 60, 25),
-    PAID(1000, 50, 1, 120, 50);
+    FREE(100, 10, 1, 60, 60),
+    PAID(1000, 50, 1, 60, 600);
 
     public final int capacity;
     public final double refillRate;

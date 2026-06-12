@@ -1,4 +1,4 @@
-local key = KEYS[1]
+local key = "FW:"..KEYS[1]
 local window = tonumber(ARGV[1])
 local limit = tonumber(ARGV[2])
 

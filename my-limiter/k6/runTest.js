@@ -2,8 +2,11 @@ import http from 'k6/http';
 import { check } from 'k6';
 
 export let options = {
-    vus: 50,
-    duration: '30s',
+    stages: [
+        { duration: '10s', target: 50 },
+        { duration: '30s', target: 0 },
+        { duration: '10s', target: 50 },
+    ]
 };
 
 export default function () {
