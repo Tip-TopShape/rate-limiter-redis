@@ -6,9 +6,9 @@ Distributed rate limiter built with Java 21, Spring Boot 3.2, Jedis 7.2, and Ups
 Java 21 · Spring Boot 3.2 · Jedis 7.2 · Upstash Redis (multi-region) · Lua · k6
  
 ## Algorithms
-Swappable via `application.yml` — no code changes. All checks are atomic via Lua `EVALSHA`.
+Swappable via `application.yml`, no code changes needed. All checks are atomic via Lua `EVALSHA`.
  
-- **Token Bucket** — lazy refill calculated at request time
+- **Token Bucket** - lazy refill calculated at request time
 - **Sliding Window** — timestamp-based
 - **Fixed Window** — counter + TTL
 
